@@ -7,6 +7,7 @@
         "start": "live-server --port=3003 --open=/index.html",
         "sass": "sass --watch scss/main.scss:css/main.css",
         "build:css": "npx sass scss/main.scss:css/main.css --style=compressed",
+        "build": "npm run build:css",
         "dev": "concurrently \"yarn run sass\" \"yarn run start\""
     },
     "keywords": [
