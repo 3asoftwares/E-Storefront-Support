@@ -31,9 +31,7 @@ const CONFIG_PROD = {
   },
 };
 
-const CONFIG = !['localhost', '127.0.0.1'].includes(window.location.hostname)
-  ? CONFIG_LOCAL
-  : CONFIG_PROD;
+const CONFIG = ['localhost', '127.0.0.1'].includes(window.location.hostname) ? CONFIG_LOCAL : CONFIG_PROD;
 
 // ==========================================
 // APPLICATION STATE
