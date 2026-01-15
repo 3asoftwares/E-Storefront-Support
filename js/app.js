@@ -181,111 +181,121 @@ function animateCounter(elementId, targetValue) {
   }, 50);
 }
 
+function hideAuthLoader() {
+    document.getElementById('authLoader')?.classList.remove('active');
+}
+
+function showAuthLoader() {
+    document.getElementById('authLoader')?.classList.add('active');
+    document.getElementById('dashboardPage')?.classList.remove('active');
+}
+
 // ==========================================
 // AUTHENTICATION
 // ==========================================
 async function initializeApp() {
-  setupEventListeners();
+    setupEventListeners();
 
-  if (AppState.isEmbedded) {
-    setupShellIntegration();
-  } else {
-    await handleStandaloneAuth();
-  }
+    if (AppState.isEmbedded) {
+        setupShellIntegration();
+    } else {
+        await handleStandaloneAuth();
+    }
 }
 
 async function handleStandaloneAuth() {
-  const params = new URLSearchParams(window.location.search);
-  const userId = params.get('userId');
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
 
-  if (userId) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-    await fetchUserById(userId);
-    return;
-  }
-
-  const cookieAuth = getAuthFromCookies();
-  if (cookieAuth?.token && cookieAuth?.user) {
-    if (['support', 'admin'].includes(cookieAuth.user.role)) {
-      AppState.token = cookieAuth.token;
-      AppState.currentUser = cookieAuth.user;
-      await showDashboard();
-      return;
+    if (userId) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        await fetchUserById(userId);
+        return;
     }
-    showAccessDenied();
-    return;
-  }
 
-  redirectToShellLogin();
+    const cookieAuth = getAuthFromCookies();
+    if (cookieAuth?.token && cookieAuth?.user) {
+        if (['support', 'admin'].includes(cookieAuth.user.role)) {
+            AppState.token = cookieAuth.token;
+            AppState.currentUser = cookieAuth.user;
+            await showDashboard();
+            return;
+        }
+        showAccessDenied();
+        return;
+    }
+
+    redirectToShellLogin();
 }
 
 async function fetchUserById(userId) {
-  try {
-    const response = await fetch(`${CONFIG.AUTH_API_URL}/user/${userId}`, {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+        const response = await fetch(`${CONFIG.AUTH_API_URL}/user/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
 
-    if (!response.ok) {
-      redirectToShellLogin();
-      return;
+        if (!response.ok) {
+            redirectToShellLogin();
+            return;
+        }
+
+        const result = await response.json();
+        if (!result.success || !result.data) {
+            redirectToShellLogin();
+            return;
+        }
+
+        const { user, accessToken, refreshToken } = result.data;
+
+        if (['support', 'admin'].includes(user.role)) {
+            storeAuthToCookies(user, accessToken, refreshToken);
+            AppState.currentUser = user;
+            AppState.token = accessToken;
+            await showDashboard();
+        } else {
+            showAccessDenied();
+        }
+    } catch (error) {
+        console.error('Failed to fetch user:', error);
+        redirectToShellLogin();
     }
-
-    const result = await response.json();
-    if (!result.success || !result.data) {
-      redirectToShellLogin();
-      return;
-    }
-
-    const { user, accessToken, refreshToken } = result.data;
-
-    if (['support', 'admin'].includes(user.role)) {
-      storeAuthToCookies(user, accessToken, refreshToken);
-      AppState.currentUser = user;
-      AppState.token = accessToken;
-      await showDashboard();
-    } else {
-      showAccessDenied();
-    }
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    redirectToShellLogin();
-  }
 }
 
 function redirectToShellLogin() {
-  window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
+    window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
 }
 
 function setupShellIntegration() {
-  window.addEventListener('message', async (event) => {
-    const { type, payload } = event.data || {};
+    window.addEventListener('message', async (event) => {
+        const { type, payload } = event.data || {};
 
-    if (type === 'AUTH_DATA' && payload?.user && payload?.token) {
-      if (['support', 'admin'].includes(payload.user.role)) {
-        AppState.currentUser = payload.user;
-        AppState.token = payload.token;
-        sessionStorage.setItem('supportAuth', JSON.stringify(payload));
-        await showDashboard();
-      } else {
-        showAccessDenied();
-      }
-    }
+        if (type === 'AUTH_DATA' && payload?.user && payload?.token) {
+            if (['support', 'admin'].includes(payload.user.role)) {
+                AppState.currentUser = payload.user;
+                AppState.token = payload.token;
+                sessionStorage.setItem('supportAuth', JSON.stringify(payload));
+                await showDashboard();
+            } else {
+                showAccessDenied();
+            }
+        }
 
-    if (type === 'THEME_CHANGE' && payload) {
-      applyTheme(payload.theme);
-    }
+        if (type === 'THEME_CHANGE' && payload) {
+            applyTheme(payload.theme);
+        }
 
-    if (type === 'LOGOUT') {
-      handleLogout();
-    }
-  });
+        if (type === 'LOGOUT') {
+            handleLogout();
+        }
+    });
 
-  window.parent?.postMessage({ type: 'REQUEST_AUTH' }, '*');
+    window.parent?.postMessage({ type: 'REQUEST_AUTH' }, '*');
 }
 
 function showAccessDenied() {
-  document.getElementById('dashboardPage')?.classList.remove('active');
-  document.body.innerHTML = `
+    hideAuthLoader();
+    document.getElementById('dashboardPage')?.classList.remove('active');
+    document.body.innerHTML = `
     <div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
       <div class="text-center">
         <i class="bi bi-shield-x text-danger" style="font-size: 64px;"></i>
@@ -301,102 +311,99 @@ function showAccessDenied() {
 }
 
 function goToShellApp() {
-  localStorage.removeItem('supportAuth');
-  sessionStorage.removeItem('supportAuth');
+    localStorage.removeItem('supportAuth');
+    sessionStorage.removeItem('supportAuth');
 
-  if (AppState.isEmbedded && window.parent) {
-    window.parent.postMessage({ type: 'CLOSE_APP' }, '*');
-  } else {
-    window.location.href = CONFIG.SHELL_APP_URL;
-  }
+    if (AppState.isEmbedded && window.parent) {
+        window.parent.postMessage({ type: 'CLOSE_APP' }, '*');
+    } else {
+        window.location.href = CONFIG.SHELL_APP_URL;
+    }
 }
 
 function handleLogout(e) {
-  e?.preventDefault();
+    e?.preventDefault();
 
-  AppState.currentUser = null;
-  AppState.token = null;
-  AppState.tickets = [];
-  AppState.supportUsers = [];
+    AppState.currentUser = null;
+    AppState.token = null;
+    AppState.tickets = [];
+    AppState.supportUsers = [];
 
-  localStorage.removeItem('supportAuth');
-  sessionStorage.removeItem('supportAuth');
-  clearAllAuthCookies();
+    localStorage.removeItem('supportAuth');
+    sessionStorage.removeItem('supportAuth');
+    clearAllAuthCookies();
 
-  if (AppState.isEmbedded && window.parent) {
-    window.parent.postMessage({ type: 'LOGOUT_REQUEST' }, '*');
-  } else {
-    window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
-  }
+    if (AppState.isEmbedded && window.parent) {
+        window.parent.postMessage({ type: 'LOGOUT_REQUEST' }, '*');
+    } else {
+        window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
+    }
 }
 
 function applyTheme(theme) {
-  const isDark = theme === 'dark';
-  document.documentElement.classList.toggle('dark', isDark);
-  document.body.classList.toggle('dark-theme', isDark);
+    const isDark = theme === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    document.body.classList.toggle('dark-theme', isDark);
 }
 
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
 function setupEventListeners() {
-  // Sidebar menu
-  document.querySelectorAll('.sidebar-menu li').forEach((item) => {
-    item.addEventListener('click', () => {
-      const page = item.dataset.page;
-      if (page) {
-        showPage(page);
-        updateActiveMenuItem(page);
-      }
+    // Sidebar menu
+    document.querySelectorAll('.sidebar-menu li').forEach((item) => {
+        item.addEventListener('click', () => {
+            const page = item.dataset.page;
+            if (page) {
+                showPage(page);
+                updateActiveMenuItem(page);
+            }
+        });
     });
-  });
 
-  // Sidebar toggle
-  document.getElementById('sidebarToggle')?.addEventListener('click', toggleSidebar);
+    // Sidebar toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', toggleSidebar);
 
-  // Logout
-  document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-  document.getElementById('logoutDropdown')?.addEventListener('click', handleLogout);
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+    document.getElementById('logoutDropdown')?.addEventListener('click', handleLogout);
 
-  // New ticket form
-  document.getElementById('newTicketForm')?.addEventListener('submit', handleCreateTicket);
+    // New ticket form
+    document.getElementById('newTicketForm')?.addEventListener('submit', handleCreateTicket);
 
-  // Filters
-  ['filterStatus', 'filterPriority', 'filterCategory'].forEach((id) => {
-    document.getElementById(id)?.addEventListener('change', filterTickets);
-  });
-  document.getElementById('ticketSearch')?.addEventListener('input', debounce(filterTickets, 300));
+    // Filters
+    ['filterStatus', 'filterPriority', 'filterCategory'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('change', filterTickets);
+    });
+    document.getElementById('ticketSearch')?.addEventListener('input', debounce(filterTickets, 300));
 
-  // Global search
-  document
-    .getElementById('globalSearch')
-    ?.addEventListener('input', debounce(handleGlobalSearch, 300));
+    // Global search
+    document.getElementById('globalSearch')?.addEventListener('input', debounce(handleGlobalSearch, 300));
 
-  // Select all checkbox
-  document.getElementById('selectAll')?.addEventListener('change', (e) => {
-    document
-      .querySelectorAll('#ticketsTableBody input[type="checkbox"]')
-      .forEach((cb) => (cb.checked = e.target.checked));
-  });
+    // Select all checkbox
+    document.getElementById('selectAll')?.addEventListener('change', (e) => {
+        document.querySelectorAll('#ticketsTableBody input[type="checkbox"]').forEach((cb) => (cb.checked = e.target.checked));
+    });
 
-  // Resolve ticket button
-  document.getElementById('resolveTicketBtn')?.addEventListener('click', handleResolveTicket);
+    // Resolve ticket button
+    document.getElementById('resolveTicketBtn')?.addEventListener('click', handleResolveTicket);
 }
 
 // ==========================================
 // NAVIGATION
 // ==========================================
 async function showDashboard() {
-  document.getElementById('dashboardPage')?.classList.add('active');
+    hideAuthLoader();
+    document.getElementById('dashboardPage')?.classList.add('active');
 
-  updateUserInfo();
-  updateUIForRole();
+    updateUserInfo();
+    updateUIForRole();
 
-  // Only load dashboard stats on initial load
-  await loadDashboardStats();
-  updateDashboardStats();
-  updatePriorityChart();
-  renderUserTickets();
+    // Only load dashboard stats on initial load
+    await loadDashboardStats();
+    updateDashboardStats();
+    updatePriorityChart();
+    renderUserTickets();
 }
 
 async function showPage(pageName) {
