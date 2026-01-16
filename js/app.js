@@ -20,15 +20,15 @@ const CONFIG_LOCAL = {
 };
 
 const CONFIG_PROD = {
-  TICKET_API_URL: 'https://e-ticket-service.up.railway.app/api',
-  AUTH_API_URL: 'https://e-auth-service.up.railway.app',
-  SHELL_APP_URL: 'https://e-shell-app.vercel.app',
-  AUTH_COOKIE_NAMES: {
-    USER: 'auth_user',
-    ACCESS_TOKEN: 'auth_access_token',
-    REFRESH_TOKEN: 'auth_refresh_token',
-    TOKEN_EXPIRY: 'auth_token_expiry',
-  },
+    TICKET_API_URL: 'https://e-ticket-service.up.railway.app/api',
+    AUTH_API_URL: 'https://e-auth-service.up.railway.app/api/auth',
+    SHELL_APP_URL: 'https://e-shell-app.vercel.app',
+    AUTH_COOKIE_NAMES: {
+        USER: 'auth_user',
+        ACCESS_TOKEN: 'auth_access_token',
+        REFRESH_TOKEN: 'auth_refresh_token',
+        TOKEN_EXPIRY: 'auth_token_expiry',
+    },
 };
 
 const CONFIG = ['localhost', '127.0.0.1'].includes(window.location.hostname) ? CONFIG_LOCAL : CONFIG_PROD;
