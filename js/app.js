@@ -357,12 +357,20 @@ function setupEventListeners() {
             if (page) {
                 showPage(page);
                 updateActiveMenuItem(page);
+                // Close sidebar on mobile after navigation
+                closeSidebarOnMobile();
             }
         });
     });
 
     // Sidebar toggle
     document.getElementById('sidebarToggle')?.addEventListener('click', toggleSidebar);
+
+    // Sidebar overlay click to close
+    document.getElementById('sidebarOverlay')?.addEventListener('click', closeSidebarOnMobile);
+
+    // Handle window resize
+    window.addEventListener('resize', debounce(handleResize, 150));
 
     // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
@@ -407,54 +415,90 @@ async function showDashboard() {
 }
 
 async function showPage(pageName) {
-  document.querySelectorAll('.content-section').forEach((s) => s.classList.remove('active'));
-  document.getElementById(`${pageName}Content`)?.classList.add('active');
+    document.querySelectorAll('.content-section').forEach((s) => s.classList.remove('active'));
+    document.getElementById(`${pageName}Content`)?.classList.add('active');
 
-  AppState.currentPage = pageName;
+    AppState.currentPage = pageName;
 
-  // Lazy load data based on page
-  switch (pageName) {
-    case 'dashboard':
-      if (!AppState.statsLoaded) await loadDashboardStats();
-      updateDashboardStats();
-      updatePriorityChart();
-      renderUserTickets();
-      break;
-    case 'tickets':
-      if (!AppState.ticketsLoaded) await loadTickets();
-      renderTicketsTable();
-      break;
-    case 'users':
-      if (!AppState.usersLoaded) await loadSupportUsers();
-      renderUsersTable();
-      break;
-    case 'newTicket':
-      if (!AppState.usersLoaded) await loadSupportUsers();
-      populateAssigneeDropdown();
-      break;
-    case 'reports':
-      if (!AppState.statsLoaded) await loadDashboardStats();
-      updateReports();
-      break;
-  }
+    // Lazy load data based on page
+    switch (pageName) {
+        case 'dashboard':
+            if (!AppState.statsLoaded) await loadDashboardStats();
+            updateDashboardStats();
+            updatePriorityChart();
+            renderUserTickets();
+            break;
+        case 'tickets':
+            if (!AppState.ticketsLoaded) await loadTickets();
+            renderTicketsTable();
+            break;
+        case 'users':
+            if (!AppState.usersLoaded) await loadSupportUsers();
+            renderUsersTable();
+            break;
+        case 'newTicket':
+            if (!AppState.usersLoaded) await loadSupportUsers();
+            populateAssigneeDropdown();
+            break;
+        case 'reports':
+            if (!AppState.statsLoaded) await loadDashboardStats();
+            updateReports();
+            break;
+    }
 }
 
 function updateActiveMenuItem(pageName) {
-  document.querySelectorAll('.sidebar-menu li').forEach((item) => {
-    item.classList.toggle('active', item.dataset.page === pageName);
-  });
+    document.querySelectorAll('.sidebar-menu li').forEach((item) => {
+        item.classList.toggle('active', item.dataset.page === pageName);
+    });
 }
 
 function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.querySelector('.main-content');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const overlay = document.getElementById('sidebarOverlay');
 
-  sidebar.classList.toggle('collapsed');
-  mainContent.classList.toggle('expanded');
+    if (window.innerWidth <= 991) {
+        // Mobile behavior - slide in/out with overlay
+        sidebar.classList.toggle('show');
+        if (overlay) overlay.classList.toggle('active');
 
-  if (window.innerWidth <= 991) {
-    sidebar.classList.toggle('show');
-  }
+        // Prevent body scroll when sidebar is open
+        document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+    } else {
+        // Desktop behavior - collapse sidebar
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+    }
+}
+
+function closeSidebarOnMobile() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    if (window.innerWidth <= 991 && sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Handle window resize
+function handleResize() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    if (window.innerWidth > 991) {
+        // Reset mobile states when switching to desktop
+        sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    } else {
+        // Ensure sidebar is hidden on mobile by default
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.remove('expanded');
+    }
 }
 
 function updateUserInfo() {
