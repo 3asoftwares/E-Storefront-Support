@@ -1,89 +1,181 @@
-# Contributing
+# Contributing to E-Storefront Support
 
-## Getting Started
+Thank you for your interest in contributing! This document provides guidelines for contributing to the E-Storefront Support website.
 
-1. Fork the repository
-2. Clone your fork
-3. Create a feature branch
-4. Make your changes
-5. Submit a pull request
+## 📑 Table of Contents
 
----
+- [Getting Started](#getting-started)
+- [Development Workflow](#development-workflow)
+- [Pre-PR Checklist](#pre-pr-checklist)
+- [Coding Standards](#coding-standards)
 
-## Development Setup
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm 8+
+
+### Setup
 
 ```bash
-# Clone repository
-git clone https://github.com/YOUR_USERNAME/e-storefront-support.git
-cd e-storefront-support
+# 1. Fork and clone
+git clone https://github.com/YOUR_USERNAME/E-Storefront-Support.git
+cd E-Storefront-Support
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Start development
-npm run dev
+# 3. Start development server
+npm start
 ```
 
----
+## 🔄 Development Workflow
 
-## Branch Naming
+### 1. Create Feature Branch
 
-| Type     | Format                | Example                 |
-| -------- | --------------------- | ----------------------- |
-| Feature  | `feature/description` | `feature/ticket-search` |
-| Bugfix   | `fix/description`     | `fix/login-error`       |
-| Hotfix   | `hotfix/description`  | `hotfix/security-patch` |
-
----
-
-## Commit Messages
-
-Use conventional commits:
-
-```
-type(scope): description
-
-feat(tickets): add search functionality
-fix(auth): resolve login timeout issue
-docs(readme): update installation steps
-style(scss): fix button alignment
+```bash
+git checkout -b feature/your-feature-name
 ```
 
----
+### 2. Make Changes
 
-## Code Standards
+- Edit HTML, CSS/SCSS, JavaScript files
+- Test locally with `npm start`
+- Compile SCSS: `npm run sass`
 
-### JavaScript
+### 3. Test Your Changes
 
-- Use ES6+ features
-- Follow consistent naming conventions
-- Add JSDoc comments for functions
-- Use `const` and `let`, never `var`
+- Open in multiple browsers
+- Test responsive design
+- Verify all interactive features
 
-### SCSS
+### 4. Push and Create PR
 
-- Follow BEM naming convention
-- Use variables for colors and spacing
-- Keep selectors shallow (max 3 levels)
+```bash
+git push origin feature/your-feature-name
+```
+
+## ✅ Pre-PR Checklist
+
+```bash
+# 1. Compile SCSS to CSS
+npm run sass
+
+# 2. Validate HTML (use W3C validator)
+# https://validator.w3.org/
+
+# 3. Test in browsers
+# - Chrome, Firefox, Safari, Edge
+
+# 4. Test responsive design
+# - Mobile, Tablet, Desktop
+
+# 5. Check console for errors
+# - No JavaScript errors
+```
+
+### Checklist
+
+- [ ] SCSS compiled to CSS
+- [ ] HTML validates
+- [ ] No console errors
+- [ ] Responsive design works
+- [ ] Cross-browser tested
+- [ ] Forms functional
+
+## 📝 Coding Standards
 
 ### HTML
 
-- Use semantic elements
-- Include accessibility attributes
-- Keep markup clean and organized
+```html
+<!-- Use semantic HTML5 -->
+<header>
+    <nav>...</nav>
+</header>
+<main>
+    <section>...</section>
+</main>
+<footer>...</footer>
+
+<!-- Use descriptive class names (BEM) -->
+<div class="card">
+    <h2 class="card__title">Title</h2>
+    <p class="card__description">Description</p>
+</div>
+```
+
+### CSS/SCSS
+
+```scss
+// Use BEM naming
+.block {
+    &__element {
+        // styles
+    }
+
+    &--modifier {
+        // styles
+    }
+}
+
+// Use variables for colors
+$primary-color: #2563eb;
+$secondary-color: #7c3aed;
+```
+
+### JavaScript
+
+```javascript
+// Use ES6+ features
+const fetchData = async (url) => {
+    const response = await fetch(url);
+    return response.json();
+};
+
+// Use descriptive function names
+function handleFormSubmit(event) {
+    event.preventDefault();
+    // ...
+}
+
+// Comment complex logic
+/**
+ * Validates contact form fields
+ * @param {Object} formData - Form field values
+ * @returns {boolean} - True if valid
+ */
+function validateForm(formData) {
+    // ...
+}
+```
+
+## 📋 Commit Guidelines
+
+### Format
+
+```
+<type>: <description>
+```
+
+### Types
+
+| Type       | Description         |
+| ---------- | ------------------- |
+| `feat`     | New feature         |
+| `fix`      | Bug fix             |
+| `docs`     | Documentation       |
+| `style`    | CSS/styling changes |
+| `refactor` | Code refactoring    |
+
+### Examples
+
+```bash
+git commit -m "feat: add FAQ accordion section"
+git commit -m "fix: contact form validation"
+git commit -m "style: update button hover states"
+```
 
 ---
 
-## Pull Request Process
-
-1. Update documentation if needed
-2. Ensure SCSS compiles without errors
-3. Test in multiple browsers
-4. Request review from maintainers
-
----
-
-## Related Documentation
-
-- [Getting Started](GETTING-STARTED.md) - Setup guide
-- [Architecture](ARCHITECTURE.md) - Code structure
+Thank you for contributing! 🎉

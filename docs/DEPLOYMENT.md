@@ -1,92 +1,87 @@
-# Deployment
+# Support Website Deployment Guide
 
-## Overview
+## 📑 Overview
 
-E-Storefront Support is deployed to Vercel for hosting.
+E-Storefront Support is a static website deployed to **Vercel**.
 
----
+## 🚀 Deployment Methods
 
-## Vercel Deployment
+### Vercel (Recommended)
 
-### Automatic Deployment
+#### Automatic Deployment
 
-1. Connect GitHub repository to Vercel
-2. Push to `main` branch triggers production deploy
-3. Pull requests get preview deployments
+Connect GitHub repository to Vercel for automatic deployments on push.
 
-### Manual Deployment
+#### Manual Deployment
 
 ```bash
 # Install Vercel CLI
-npm i -g vercel
+npm install -g vercel
 
-# Login to Vercel
+# Login
 vercel login
 
-# Deploy preview
+# Deploy
 vercel
 
-# Deploy production
+# Deploy to production
 vercel --prod
 ```
 
----
-
-## Build Configuration
-
-### vercel.json
+### Configuration
 
 ```json
+// vercel.json
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
-      ]
-    }
-  ]
+    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
 ```
 
----
+## 🔧 Build Process
 
-## Pre-Deployment Checklist
-
-- [ ] Build CSS: `npm run build`
-- [ ] Test locally: `npm run start`
-- [ ] Check all links work
-- [ ] Verify API connectivity
-- [ ] Update environment variables
-
----
-
-## Environments
-
-| Branch    | Environment | URL                          |
-| --------- | ----------- | ---------------------------- |
-| main      | Production  | support.3asoftwares.com      |
-| develop   | Staging     | staging-support.vercel.app   |
-| feature/* | Preview     | preview-*.vercel.app         |
-
----
-
-## Rollback
+### Pre-Deployment Steps
 
 ```bash
-# List deployments
-vercel ls
+# 1. Compile SCSS to CSS
+npm run sass
 
-# Promote previous deployment
-vercel promote <deployment-url>
+# 2. Verify output
+ls -la css/main.css
+
+# 3. Test locally
+npm start
 ```
+
+### Production Checklist
+
+- [ ] SCSS compiled to CSS
+- [ ] All images optimized
+- [ ] JavaScript minified (if applicable)
+- [ ] Environment variables configured
+- [ ] Forms tested
+- [ ] Mobile responsiveness verified
+
+## 🌐 Environment Variables
+
+Set in Vercel dashboard:
+
+| Variable      | Description      |
+| ------------- | ---------------- |
+| `API_URL`     | Backend API URL  |
+| `GRAPHQL_URL` | GraphQL endpoint |
+
+## 📊 Monitoring
+
+### Vercel Analytics
+
+Enable in Vercel dashboard for:
+
+- Page views
+- Performance metrics
+- Error tracking
 
 ---
 
-## Related Documentation
+See also:
 
-- [Vercel](technologies/VERCEL.md) - Vercel platform
-- [Environment](ENVIRONMENT.md) - Environment configuration
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Project architecture
