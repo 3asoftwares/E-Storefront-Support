@@ -48,23 +48,13 @@ Customer support and help center website for E-Storefront platform, built with *
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-<<<<<<< HEAD
-│                  E-Storefront Support Technology Stack                       │
-=======
 │                   E-Storefront Support Technology Stack                      │
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
 │  │                           UI LAYER                                     │ │
 │  ├────────────────────────────────────────────────────────────────────────┤ │
 │  │                                                                        │ │
-<<<<<<< HEAD
-│  │   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐   │ │
-│  │   │   Bootstrap 5    │  │  Bootstrap Icons │  │  Material Icons  │   │ │
-│  │   │   Components     │  │    Icon Set      │  │   Google Fonts   │   │ │
-│  │   └──────────────────┘  └──────────────────┘  └──────────────────┘   │ │
-=======
 │  │   ┌─────────────────────────────────────────────────────────────────┐ │ │
 │  │   │                      Bootstrap 5.0                              │ │ │
 │  │   │    Grid System │ Components │ Utilities │ Responsive Design    │ │ │
@@ -75,20 +65,10 @@ Customer support and help center website for E-Storefront platform, built with *
 │  │   │  Variables, Mixins  │  │     Icon Library                    │   │ │
 │  │   │  Nesting, Functions │  │                                     │   │ │
 │  │   └─────────────────────┘  └─────────────────────────────────────┘   │ │
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 │  │                                                                        │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                      │                                       │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
-<<<<<<< HEAD
-│  │                        APPLICATION LAYER                               │ │
-│  ├────────────────────────────────────────────────────────────────────────┤ │
-│  │                                                                        │ │
-│  │   ┌──────────────────────────────────────────────────────────────────┐│ │
-│  │   │                    Vanilla JavaScript (ES6+)                     ││ │
-│  │   │     MVC Pattern │ Singleton Pattern │ Fetch API │ Debouncing    ││ │
-│  │   └──────────────────────────────────────────────────────────────────┘│ │
-=======
 │  │                       MARKUP LAYER                                     │ │
 │  ├────────────────────────────────────────────────────────────────────────┤ │
 │  │                                                                        │ │
@@ -96,20 +76,10 @@ Customer support and help center website for E-Storefront platform, built with *
 │  │   │                         HTML5                                   │ │ │
 │  │   │        Semantic Elements │ Accessibility │ SEO Friendly        │ │ │
 │  │   └─────────────────────────────────────────────────────────────────┘ │ │
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 │  │                                                                        │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                      │                                       │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
-<<<<<<< HEAD
-│  │                         STYLING LAYER                                  │ │
-│  ├────────────────────────────────────────────────────────────────────────┤ │
-│  │                                                                        │ │
-│  │   ┌──────────────────────────┐  ┌──────────────────────────────────┐  │ │
-│  │   │         SCSS            │  │         CSS3 Output              │  │ │
-│  │   │    Preprocessor         │  │    Compiled Stylesheet           │  │ │
-│  │   └──────────────────────────┘  └──────────────────────────────────┘  │ │
-=======
 │  │                      SCRIPTING LAYER                                   │ │
 │  ├────────────────────────────────────────────────────────────────────────┤ │
 │  │                                                                        │ │
@@ -117,28 +87,12 @@ Customer support and help center website for E-Storefront platform, built with *
 │  │   │                   Vanilla JavaScript (ES6+)                     │ │ │
 │  │   │   Modules │ Async/Await │ Fetch API │ DOM Manipulation         │ │ │
 │  │   └─────────────────────────────────────────────────────────────────┘ │ │
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 │  │                                                                        │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                      │                                       │
 │                                      ▼                                       │
 │  ┌────────────────────────────────────────────────────────────────────────┐ │
 │  │                           API LAYER                                    │ │
-<<<<<<< HEAD
-│  │                    GraphQL Gateway (Backend)                           │ │
-│  └────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │                      DEVELOPMENT TOOLS                                 │ │
-│  ├────────────────────────────────────────────────────────────────────────┤ │
-│  │          Sass (dart-sass) │ live-server │ concurrently                │ │
-│  └────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│  ┌────────────────────────────────────────────────────────────────────────┐ │
-│  │                         DEPLOYMENT                                     │ │
-│  ├────────────────────────────────────────────────────────────────────────┤ │
-│  │                           Vercel                                       │ │
-=======
 │  ├────────────────────────────────────────────────────────────────────────┤ │
 │  │              Fetch API → GraphQL Gateway (Ticket Service)             │ │
 │  └────────────────────────────────────────────────────────────────────────┘ │
@@ -147,51 +101,11 @@ Customer support and help center website for E-Storefront platform, built with *
 │  │                      BUILD & DEPLOYMENT                                │ │
 │  ├────────────────────────────────────────────────────────────────────────┤ │
 │  │     SCSS Compiler (sass) │ Live Server (Dev) │ Vercel (Production)    │ │
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 │  └────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<<<<<<< HEAD
-## 📦 Prerequisites
-
-- **Node.js** >= 18.x
-- **yarn** or **npm**
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/3asoftwares/E-Storefront-Support.git
-cd E-Storefront-Support
-```
-
-### 2. Install Dependencies
-
-```bash
-yarn install
-# or
-npm install
-```
-
-### 3. Start Development Server
-
-```bash
-yarn dev
-# or
-npm run dev
-```
-
-This will:
-
-- Start the SCSS compiler in watch mode
-- Start the live-server on port 3003
-
-Visit [http://localhost:3003](http://localhost:3003) to view the application.
-
-=======
 For detailed technology documentation, see [docs/technologies/](docs/technologies/).
 
 ## 🚀 Getting Started
@@ -222,66 +136,10 @@ npm start
 git clone https://github.com/3asoftwares/E-Storefront-Support.git && cd E-Storefront-Support && npm install && npm start
 ```
 
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 ## 📁 Project Structure
 
 ```
 E-Storefront-Support/
-<<<<<<< HEAD
-├── index.html              # Main HTML entry point
-├── css/
-│   └── main.css            # Compiled CSS output
-├── scss/
-│   └── main.scss           # SCSS source files
-├── js/
-│   └── app.js              # Main JavaScript application (ES6+)
-├── images/                 # Image assets
-├── docs/                   # Documentation
-│   └── technologies/       # Technology guides
-├── package.json            # Dependencies & scripts
-└── vercel.json             # Vercel deployment config
-```
-
-## 📜 Available Scripts
-
-| Command          | Description                           |
-| ---------------- | ------------------------------------- |
-| `yarn dev`       | Start dev server with SCSS watch mode |
-| `yarn start`     | Start live-server on port 3003        |
-| `yarn sass`      | Watch SCSS and compile to CSS         |
-| `yarn build`     | Build CSS for production (compressed) |
-| `yarn build:css` | Compile SCSS to compressed CSS        |
-
-## 🌐 Deployment
-
-### Vercel
-
-The project is configured for Vercel deployment with `vercel.json`:
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy to Vercel
-vercel
-```
-
-### Manual Deployment
-
-1. Build CSS for production:
-
-    ```bash
-    yarn build
-    ```
-
-2. Deploy the following files to your static hosting:
-    - `index.html`
-    - `css/main.css`
-    - `js/app.js`
-    - `images/` folder
-
-## � Documentation
-=======
 ├── index.html              # Main HTML page
 ├── package.json            # Dependencies
 ├── vercel.json            # Vercel config
@@ -368,46 +226,11 @@ npm run sass
 ```
 
 ## 📚 Documentation
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 
 All documentation is located in the [`docs/`](docs/) folder:
 
 ### Core Documentation
 
-<<<<<<< HEAD
-| Document                                | Description                             |
-| --------------------------------------- | --------------------------------------- |
-| [README.md](docs/README.md)             | Documentation index                     |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture and design patterns |
-| [API.md](docs/API.md)                   | GraphQL API reference and integration   |
-| [GETTING-STARTED.md](docs/GETTING-STARTED.md) | Quick start guide                 |
-| [DEPLOYMENT.md](docs/DEPLOYMENT.md)     | Vercel deployment guide                 |
-| [ENVIRONMENT.md](docs/ENVIRONMENT.md)   | Environment configuration               |
-| [SECURITY.md](docs/SECURITY.md)         | Security policies and best practices    |
-| [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines                 |
-| [CHANGELOG.md](docs/CHANGELOG.md)       | Version history                         |
-
-### Technology Guides
-
-| Document                                             | Description              |
-| ---------------------------------------------------- | ------------------------ |
-| [Technologies Overview](docs/technologies/)          | Full tech stack docs     |
-| [JavaScript](docs/technologies/JAVASCRIPT.md)        | JavaScript ES6+ patterns |
-| [HTML5](docs/technologies/HTML5.md)                  | HTML5 markup             |
-| [CSS3](docs/technologies/CSS3.md)                    | CSS3 styling             |
-| [Bootstrap](docs/technologies/BOOTSTRAP.md)          | Bootstrap 5 framework    |
-| [SCSS](docs/technologies/SCSS.md)                    | SCSS preprocessor        |
-| [Sass](docs/technologies/SASS.md)                    | Sass compiler            |
-| [Bootstrap Icons](docs/technologies/BOOTSTRAP_ICONS.md) | Icon library          |
-| [Live Server](docs/technologies/LIVE_SERVER.md)      | Development server       |
-| [Vercel](docs/technologies/VERCEL.md)                | Vercel deployment        |
-
-## �🔗 Related Projects
-
-- [E-Storefront](https://github.com/3asoftwares/E-Storefront) - Backend services & admin apps
-- [E-Storefront-Web](https://github.com/3asoftwares/E-Storefront-Web) - Customer web storefront
-- [E-Storefront-Mobile](https://github.com/3asoftwares/E-Storefront-Mobile) - Mobile app
-=======
 | Document                                | Description          |
 | --------------------------------------- | -------------------- |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Project architecture |
@@ -432,7 +255,6 @@ All documentation is located in the [`docs/`](docs/) folder:
 ## 🤝 Contributing
 
 Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
->>>>>>> 195f8e0876b63d63253d616bb9a40c254f057cbb
 
 ## 📄 License
 
