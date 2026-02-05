@@ -20,9 +20,9 @@ const CONFIG_LOCAL = {
 };
 
 const CONFIG_PROD = {
-    TICKET_API_URL: 'https://e-ticket-service.up.railway.app/api',
-    AUTH_API_URL: 'https://e-auth-service.up.railway.app/api/auth',
-    SHELL_APP_URL: 'https://e-shell-app.vercel.app',
+    TICKET_API_URL: 'https://e-storefront-ticket.vercel.app/api',
+    AUTH_API_URL: 'https://e-storefront-auth.vercel.app/api/auth',
+    SHELL_APP_URL: 'https://e-storefront-shell.vercel.app',
     AUTH_COOKIE_NAMES: {
         USER: 'auth_user',
         ACCESS_TOKEN: 'auth_access_token',
@@ -37,71 +37,71 @@ const CONFIG = ['localhost', '127.0.0.1'].includes(window.location.hostname) ? C
 // APPLICATION STATE
 // ==========================================
 const AppState = {
-  currentUser: null,
-  tickets: [],
-  supportUsers: [],
-  dashboardStats: null,
-  currentPage: 'dashboard',
-  selectedTicket: null,
-  isLoading: false,
-  token: null,
-  isEmbedded: window.self !== window.top,
-  usersCurrentPage: 1,
-  usersPerPage: 10,
-  ticketsCurrentPage: 1,
-  ticketsPerPage: 10,
-  // Lazy loading flags
-  ticketsLoaded: false,
-  usersLoaded: false,
-  statsLoaded: false,
+    currentUser: null,
+    tickets: [],
+    supportUsers: [],
+    dashboardStats: null,
+    currentPage: 'dashboard',
+    selectedTicket: null,
+    isLoading: false,
+    token: null,
+    isEmbedded: window.self !== window.top,
+    usersCurrentPage: 1,
+    usersPerPage: 10,
+    ticketsCurrentPage: 1,
+    ticketsPerPage: 10,
+    // Lazy loading flags
+    ticketsLoaded: false,
+    usersLoaded: false,
+    statsLoaded: false,
 };
 
 // ==========================================
 // COOKIE HELPERS
 // ==========================================
 function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {
-    return decodeURIComponent(parts.pop().split(';').shift());
-  }
-  return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return decodeURIComponent(parts.pop().split(';').shift());
+    }
+    return null;
 }
 
 function setCookie(name, value, days = 1) {
-  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 }
 
 function deleteCookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
 function clearAllAuthCookies() {
-  Object.values(CONFIG.AUTH_COOKIE_NAMES).forEach(deleteCookie);
+    Object.values(CONFIG.AUTH_COOKIE_NAMES).forEach(deleteCookie);
 }
 
 function getAuthFromCookies() {
-  const userStr = getCookie(CONFIG.AUTH_COOKIE_NAMES.USER);
-  const token = getCookie(CONFIG.AUTH_COOKIE_NAMES.ACCESS_TOKEN);
+    const userStr = getCookie(CONFIG.AUTH_COOKIE_NAMES.USER);
+    const token = getCookie(CONFIG.AUTH_COOKIE_NAMES.ACCESS_TOKEN);
 
-  if (!userStr || !token) return null;
+    if (!userStr || !token) return null;
 
-  try {
-    return { user: JSON.parse(userStr), token };
-  } catch (e) {
-    console.error('Error parsing user cookie:', e);
-    return null;
-  }
+    try {
+        return { user: JSON.parse(userStr), token };
+    } catch (e) {
+        console.error('Error parsing user cookie:', e);
+        return null;
+    }
 }
 
 function storeAuthToCookies(user, accessToken, refreshToken = null) {
-  setCookie(CONFIG.AUTH_COOKIE_NAMES.USER, JSON.stringify(user), 7);
-  setCookie(CONFIG.AUTH_COOKIE_NAMES.ACCESS_TOKEN, accessToken, 1);
-  if (refreshToken) {
-    setCookie(CONFIG.AUTH_COOKIE_NAMES.REFRESH_TOKEN, refreshToken, 7);
-  }
-  setCookie(CONFIG.AUTH_COOKIE_NAMES.TOKEN_EXPIRY, (Date.now() + 3600 * 1000).toString(), 1);
+    setCookie(CONFIG.AUTH_COOKIE_NAMES.USER, JSON.stringify(user), 7);
+    setCookie(CONFIG.AUTH_COOKIE_NAMES.ACCESS_TOKEN, accessToken, 1);
+    if (refreshToken) {
+        setCookie(CONFIG.AUTH_COOKIE_NAMES.REFRESH_TOKEN, refreshToken, 7);
+    }
+    setCookie(CONFIG.AUTH_COOKIE_NAMES.TOKEN_EXPIRY, (Date.now() + 3600 * 1000).toString(), 1);
 }
 
 // ==========================================
@@ -109,76 +109,75 @@ function storeAuthToCookies(user, accessToken, refreshToken = null) {
 // ==========================================
 const capitalize = (str) => (str ? str.charAt(0).toUpperCase() + str.slice(1) : '');
 
-const truncateText = (text, maxLength) =>
-  text && text.length > maxLength ? text.substring(0, maxLength) + '...' : text || '';
+const truncateText = (text, maxLength) => (text && text.length > maxLength ? text.substring(0, maxLength) + '...' : text || '');
 
 const formatStatus = (status) => (status ? status.split('-').map(capitalize).join(' ') : '');
 
 function formatDate(date) {
-  if (!date) return '';
-  const d = new Date(date);
-  const days = Math.floor((new Date() - d) / (1000 * 60 * 60 * 24));
+    if (!date) return '';
+    const d = new Date(date);
+    const days = Math.floor((new Date() - d) / (1000 * 60 * 60 * 24));
 
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 7) return `${days} days ago`;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days} days ago`;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function debounce(func, wait) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
 }
 
 function getUserAvatarUrl(name) {
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`;
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`;
 }
 
 // ==========================================
 // UI HELPERS
 // ==========================================
 function setLoading(isLoading) {
-  AppState.isLoading = isLoading;
-  document.querySelectorAll('button[type="submit"]').forEach((btn) => {
-    btn.disabled = isLoading;
-    if (isLoading) {
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
-    }
-  });
+    AppState.isLoading = isLoading;
+    document.querySelectorAll('button[type="submit"]').forEach((btn) => {
+        btn.disabled = isLoading;
+        if (isLoading) {
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+        }
+    });
 }
 
 function showToast(message, type = 'success') {
-  const toast = document.getElementById('successToast');
-  const toastMessage = document.getElementById('toastMessage');
-  const toastHeader = toast?.querySelector('.toast-header');
+    const toast = document.getElementById('successToast');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastHeader = toast?.querySelector('.toast-header');
 
-  if (!toast || !toastMessage || !toastHeader) return;
+    if (!toast || !toastMessage || !toastHeader) return;
 
-  toastMessage.textContent = message;
-  toastHeader.classList.toggle('bg-danger', type === 'error');
-  toastHeader.classList.toggle('bg-success', type !== 'error');
+    toastMessage.textContent = message;
+    toastHeader.classList.toggle('bg-danger', type === 'error');
+    toastHeader.classList.toggle('bg-success', type !== 'error');
 
-  new bootstrap.Toast(toast).show();
+    new bootstrap.Toast(toast).show();
 }
 
 function animateCounter(elementId, targetValue) {
-  const element = document.getElementById(elementId);
-  if (!element) return;
+    const element = document.getElementById(elementId);
+    if (!element) return;
 
-  let current = 0;
-  const increment = targetValue / 20;
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= targetValue) {
-      element.textContent = targetValue;
-      clearInterval(timer);
-    } else {
-      element.textContent = Math.floor(current);
-    }
-  }, 50);
+    let current = 0;
+    const increment = targetValue / 20;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= targetValue) {
+            element.textContent = targetValue;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current);
+        }
+    }, 50);
 }
 
 function hideAuthLoader() {
@@ -262,7 +261,7 @@ async function fetchUserById(userId) {
 }
 
 function redirectToShellLogin() {
-    window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
+    // window.location.href = `${CONFIG.SHELL_APP_URL}?logout=true`;
 }
 
 function setupShellIntegration() {
