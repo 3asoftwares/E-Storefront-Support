@@ -562,9 +562,7 @@ async function loadDashboardStats() {
     setLoading(true);
     const userId = AppState.currentUser?._id || AppState.currentUser?.id;
     const endpoint = userId ? `/tickets/stats?userId=${userId}` : '/tickets/stats';
-    console.log('loadDashboardStats - calling:', endpoint);
     const response = await apiRequest(endpoint);
-    console.log('loadDashboardStats - response:', response);
     if (response.success) {
       AppState.dashboardStats = response.data;
       AppState.statsLoaded = true;
